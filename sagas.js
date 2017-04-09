@@ -12,6 +12,17 @@ export function* watchIncrementAsync() {
     yield takeEvery('INCREMENT_ASYNC', incrementAsync)
 }
 
+// Our worker Saga: will perform the async decrement task
+export function* decrementAsync() {
+    yield call(delay, 1000)
+    yield put({ type: 'DECREMENT' })
+}
+
+// Our watcher Saga: spawn a new decrementAsync task on each DECREMENT_ASYNC
+export function* watchDecrementAsync() {
+    yield takeEvery('DECREMENT_ASYNC', decrementAsync)
+}
+
 export function* helloSaga() {
     console.log('Hello Sagas!')
 }
@@ -20,6 +31,7 @@ export function* helloSaga() {
 export default function* rootSaga() {
     yield [
 	helloSaga(),
-	watchIncrementAsync()
+	watchIncrementAsync(),
+	watchDecrementAsync()
     ]
 }
