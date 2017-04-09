@@ -2,7 +2,7 @@ import test from 'tape'
 
 import { put, call } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { incrementAsync } from './sagas'
+import { incrementAsync, decrementAsync } from './sagas'
 
 test('incrementAsync Saga test', (assert) => {
     const gen = incrementAsync()
@@ -23,6 +23,30 @@ test('incrementAsync Saga test', (assert) => {
 	gen.next(),
 	{ done: true, value: undefined },
 	'incrementAsync Saga must be done'
+    )
+
+    assert.end()
+});
+
+test('decrementAsync Saga test', (assert) => {
+    const gen = decrementAsync()
+
+    assert.deepEqual(
+	gen.next().value,
+	call(delay, 1000),
+	'decrementAsync Saga must call delay(1000)'
+    )
+
+    assert.deepEqual(
+	gen.next().value,
+	put({ type: 'DECREMENT' }),
+	'decrementAsync Saga must dispatch an DECREMENT action'
+    )
+
+    assert.deepEqual(
+	gen.next(),
+	{ done: true, value: undefined },
+	'decrementAsync Saga must be done'
     )
 
     assert.end()
